@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Created by Kinglf on 2016/10/27.
+ * 使用java原生序列化方式
  */
 public class ProcessSocket implements Runnable {
     private final static Logger logger= LoggerFactory.getLogger(ProcessSocket.class);

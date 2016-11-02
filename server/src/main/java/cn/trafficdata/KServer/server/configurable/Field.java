@@ -13,4 +13,8 @@ public class Field {
     public final static String Default_HttpConfigName="default";
     public static Map<String,HttpClientConfig> httpClientConfigMap=new HashMap<String, HttpClientConfig>();
 
+    static {
+        httpClientConfigMap.put(Default_HttpConfigName,new HttpClientConfig());
+    }
+
 }
