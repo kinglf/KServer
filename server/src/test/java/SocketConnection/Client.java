@@ -1,6 +1,6 @@
 package SocketConnection;
 
-import cn.trafficdata.KServer.server.model.WebUrl;
+import cn.trafficdata.KServer.common.model.WebUrl;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;

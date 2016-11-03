@@ -1,13 +1,11 @@
 package SocketConnection;
 
-import cn.trafficdata.KServer.server.model.WebUrl;
+import cn.trafficdata.KServer.common.model.WebUrl;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketAddress;
 import java.util.List;
 
 /**

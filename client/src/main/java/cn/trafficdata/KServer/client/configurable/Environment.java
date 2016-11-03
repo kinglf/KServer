@@ -1,7 +1,7 @@
 package cn.trafficdata.KServer.client.configurable;
 
 import cn.trafficdata.KServer.client.Utils.ConfigUtils;
-import cn.trafficdata.KServer.server.model.HttpClientConfig;
+import cn.trafficdata.KServer.common.model.HttpClientConfig;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;

@@ -1,6 +1,5 @@
 package cn.trafficdata.KServer.testLog;
 
-import cn.trafficdata.KServer.server.utils.KLog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
