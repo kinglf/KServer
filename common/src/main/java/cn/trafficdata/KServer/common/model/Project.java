@@ -32,6 +32,15 @@ public class Project implements Serializable {
     private HttpClientConfig httpClientConfig;//当前站点的采集配置
     private int urlTotal;//url总数
     private List<WebUrl> webUrlList;
+    private String domain;
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
 
     public List<WebUrl> getWebUrlList() {
         return webUrlList;

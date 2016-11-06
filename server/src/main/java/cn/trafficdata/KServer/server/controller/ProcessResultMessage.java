@@ -1,4 +1,4 @@
-package cn.trafficdata.KServer.common.controller;
+package cn.trafficdata.KServer.server.controller;
 
 import cn.trafficdata.KServer.common.model.ResultMessage;
 

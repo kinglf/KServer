@@ -1,4 +1,4 @@
-package cn.trafficdata.KServer.common.controller;
+package cn.trafficdata.KServer.server.controller;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

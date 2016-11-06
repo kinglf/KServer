@@ -1,5 +1,5 @@
 package utils;
-import cn.trafficdata.KServer.common.utils.MessageUtil;
+import cn.trafficdata.KServer.server.utils.MessageUtil;
 import org.junit.Test;
 
 import java.util.ArrayList;

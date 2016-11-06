@@ -1,5 +1,6 @@
-package cn.trafficdata.KServer.common.utils;
+package cn.trafficdata.KServer.server.utils;
 
+import cn.trafficdata.KServer.server.configurable.Field;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
@@ -14,18 +15,12 @@ import java.util.Set;
 public class RedisUtil {
 
 
-    private static String JEDIS_IP;
-    private static int JEDIS_PORT;
-    private static String JEDIS_PASSWORD;
+
 
     private static JedisPool jedisPool;
 
     static {
-        //Configuration自行写的配置文件解析类,继承自Properties
-        Configuration conf = Configuration.getInstance();
-        JEDIS_IP = conf.getString("jedis.ip", "127.0.0.1");
-        JEDIS_PORT = conf.getInt("jedis.port", 6379);
-        JEDIS_PASSWORD = conf.getString("jedis.password", null);
+
         JedisPoolConfig config = new JedisPoolConfig();
         config.setMaxActive(5000);
         config.setMaxIdle(256);
@@ -36,7 +31,7 @@ public class RedisUtil {
         config.setMinEvictableIdleTimeMillis(60000L);
         config.setTimeBetweenEvictionRunsMillis(3000L);
         config.setNumTestsPerEvictionRun(-1);
-        jedisPool = new JedisPool(config, JEDIS_IP, JEDIS_PORT, 60000);
+        jedisPool = new JedisPool(config, Field.JEDIS_IP, Field.JEDIS_PORT, 60000);
     }
 
     /**

@@ -3,6 +3,7 @@ package Database;
 import cn.trafficdata.KServer.common.model.HttpClientConfig;
 import cn.trafficdata.KServer.common.model.Project;
 import cn.trafficdata.KServer.common.model.WebUrl;
+import cn.trafficdata.KServer.server.service.MongoDBServiceImpl;
 import com.cybermkd.kit.MongoKit;
 import com.cybermkd.kit.MongoQuery;
 import com.cybermkd.plugin.MongoPlugin;
@@ -28,7 +29,7 @@ public class testMongDb {
 
         MongoPlugin mongoPlugin=new MongoPlugin();
         mongoPlugin.add("127.0.0.1",27017);
-        mongoPlugin.setDatabase("test");
+        mongoPlugin.setDatabase("KServer");
         MongoClient client = mongoPlugin.getMongoClient();
         MongoKit.INSTANCE.init(client, mongoPlugin.getDatabase());
 
@@ -41,6 +42,7 @@ public class testMongDb {
         project.setLevel(1);
         project.setStatus(1);
         project.setUseJavaScript(true);
+        project.setDomain("hahah.com");
         List<WebUrl> webUrlList=new ArrayList<WebUrl>();
         for(int i=0;i<100;i++){
             WebUrl webUrl=new WebUrl();
@@ -72,18 +74,14 @@ public class testMongDb {
          * 试用MongoDBPlugin
          */
 
+        for(int i=0;i<6;i++){
+            MongoDBServiceImpl.addProject(project);
+        }
         MongoQuery query=new MongoQuery();
-        query.use("projects").set(project).save();
-        query.use("projects").set(project).save();
-        query.use("projects").set(project).save();
-        query.use("projects").set(project).save();
-        query.use("projects").set(project).save();
-        query.use("projects").set(project).save();
-        List<Project> projects = query.use("projects").findAll(Project.class);//遍历所有
+        List<Project> projects = query.use("Projects").findAll(Project.class);//遍历所有
 //        query.use("item").eq("b","2").find(xx.class) //单个查找
 //        query.use("item").byId("5710a81ab73a87092e17a02b").find() //根据ID查找
         for(Project pro:projects){
-
                 System.out.println(project.getDescrption());
         }
     }

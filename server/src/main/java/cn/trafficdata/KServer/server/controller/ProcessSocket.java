@@ -1,8 +1,8 @@
-package cn.trafficdata.KServer.common.controller;
+package cn.trafficdata.KServer.server.controller;
 
 import cn.trafficdata.KServer.common.model.ResultMessage;
 import cn.trafficdata.KServer.common.model.TaskMessage;
-import cn.trafficdata.KServer.common.service.TaskService;
+import cn.trafficdata.KServer.server.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +37,7 @@ public class ProcessSocket implements Runnable {
                 //使用本线程从数据库中获取数据,如果超时或者失败则返回空的TaskMessage对象
                 List<String> unfinishTasks = resultMessage.getUnfinishTasks();
                 //封装新任务
-                TaskMessage newTaskMessage = TaskService.getNewTaskMessage(unfinishTasks);
+                TaskMessage newTaskMessage = TaskService.getNewTaskMessage(unfinishTasks,resultMessage.getHostInfo().getMaxThreads());
                 ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
                 oos.writeObject(newTaskMessage);
                 oos.flush();

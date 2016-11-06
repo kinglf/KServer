@@ -1,6 +1,7 @@
-package cn.trafficdata.KServer.common.utils;
+package cn.trafficdata.KServer.server.utils;
 
 import cn.trafficdata.KServer.common.model.WebUrl;
+import cn.trafficdata.KServer.common.utils.UrlUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,7 +21,7 @@ public class MessageUtil {
     public static Map<String,Integer> getUnFinshTaskDomainNumMap(List<String> urlStrList){
         Map<String,Integer> urlMapDomain=new HashMap<String, Integer>();
         for(String urlStr:urlStrList){
-            String domain=UrlUtils.getDomain(urlStr);
+            String domain= UrlUtils.getDomain(urlStr);
             if(urlMapDomain.get(domain)==null){
                 urlMapDomain.put(domain,1);
             }else{

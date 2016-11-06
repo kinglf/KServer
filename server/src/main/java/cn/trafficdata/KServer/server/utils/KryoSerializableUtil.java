@@ -1,4 +1,4 @@
-package cn.trafficdata.KServer.common.utils;
+package cn.trafficdata.KServer.server.utils;
 
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;

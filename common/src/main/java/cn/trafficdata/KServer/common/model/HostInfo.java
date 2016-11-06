@@ -8,7 +8,16 @@ import java.util.List;
 public class HostInfo {
     private String name;
     private String schema;
+    private int maxThreads;
     private List<String> logList;
+
+    public int getMaxThreads() {
+        return maxThreads;
+    }
+
+    public void setMaxThreads(int maxThreads) {
+        this.maxThreads = maxThreads;
+    }
 
     public List<String> getLogList() {
         return logList;
