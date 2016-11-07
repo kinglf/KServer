@@ -3,6 +3,7 @@ package Database;
 import cn.trafficdata.KServer.common.model.HttpClientConfig;
 import cn.trafficdata.KServer.common.model.Project;
 import cn.trafficdata.KServer.common.model.WebUrl;
+import cn.trafficdata.KServer.server.configurable.Field;
 import cn.trafficdata.KServer.server.service.MongoDBServiceImpl;
 import com.cybermkd.kit.MongoKit;
 import com.cybermkd.kit.MongoQuery;
@@ -74,7 +75,7 @@ public class testMongDb {
          * 试用MongoDBPlugin
          */
 
-        for(int i=0;i<6;i++){
+        for(int i=0;i<600;i++){
             MongoDBServiceImpl.addProject(project);
         }
         MongoQuery query=new MongoQuery();
@@ -100,5 +101,42 @@ public class testMongDb {
             System.out.println(pro.getId());
         }
 
+    }
+
+    @Test
+    public void updateClient(){
+        String mid="581fee3b2e23ec232c649d65";
+//        MongoQuery query=new MongoQuery();
+//        query.use(Field.Client_Collection_Name).set(project).save();
+//
+//        MongoQuery mongoQuery=new MongoQuery();
+//        mongoQuery.use(Field.Client_Collection_Name).byId(query.getId()).modify(project).update();
+        MongoQuery mongoQuery2=new MongoQuery();
+        long update = mongoQuery2.use(Field.Client_Collection_Name).byId(mid).modify(project).update();
+        System.out.println(update);
+    }
+
+    @Test
+    public void testlistSave(){
+        MongoQuery mongoQuery=new MongoQuery();
+        List<Project> projects=new ArrayList<Project>();
+
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+        projects.add(project);
+
+        System.out.println(projects.size());
+        mongoQuery.use(Field.Project_Collection_Name);
+        for(Project project:projects){
+            mongoQuery.set(project).save();
+        }
     }
 }

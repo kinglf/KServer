@@ -1,5 +1,7 @@
 package cn.trafficdata.KServer.common.model;
 
+import org.omg.CORBA.Environment;
+
 import java.util.List;
 
 /**
@@ -7,9 +9,21 @@ import java.util.List;
  */
 public class HostInfo {
     private String name;
+    private String markcode;//识别码
     private String schema;
     private int maxThreads;
-    private List<String> logList;
+    private List<LogMessage> logList;
+
+    public HostInfo(){
+
+    }
+    public HostInfo(String name,String markcode,String schema,int maxThreads,List<LogMessage> logMessageList){
+        this.name=name;
+        this.markcode=markcode;
+        this.schema=schema;
+        this.maxThreads=maxThreads;
+        this.logList=logMessageList;
+    }
 
     public int getMaxThreads() {
         return maxThreads;
@@ -19,15 +33,15 @@ public class HostInfo {
         this.maxThreads = maxThreads;
     }
 
-    public List<String> getLogList() {
+    public List<LogMessage> getLogList() {
         return logList;
     }
 
-    public void setLogList(List<String> logList) {
+    public void setLogList(List<LogMessage> logList) {
         this.logList = logList;
     }
 
-    public void setLogList(String logStr) {
+    public void setLogList(LogMessage logStr) {
         this.logList.add(logStr);
     }
 
@@ -46,5 +60,13 @@ public class HostInfo {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getMarkcode() {
+        return markcode;
+    }
+
+    public void setMarkcode(String markcode) {
+        this.markcode = markcode;
     }
 }

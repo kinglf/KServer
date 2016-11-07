@@ -37,6 +37,9 @@ public class Field {
     public static String MongoDB_DATABASE;
     public static String Project_Collection_Name = "Projects";
     public static String Page_Collection_Name = "Pages";
+    public static String Client_Collection_Name = "Clients";
+    public static String Log_Collection_Name = "Logs";
+
 
     static {
         httpClientConfigMap.put(Default_HttpConfigName, new HttpClientConfig());
@@ -57,6 +60,8 @@ public class Field {
         MongoDB_DATABASE = conf.getString("mongodb.database", "KServer");
         Project_Collection_Name = conf.getString("mongodb.Project_Collection_Name", "Projects");
         Page_Collection_Name = conf.getString("mongodb.Page_Collection_Name", "Pages");
+        Client_Collection_Name = conf.getString("mongodb.Client_Collection_Name", "Clients");
+        Log_Collection_Name = conf.getString("mongodb.Log_Collection_Name", "Logs");
     }
 
 }

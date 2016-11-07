@@ -33,7 +33,9 @@ public class ProcessSocket implements Runnable {
             if (obj instanceof ResultMessage) {
                 //1.使用线程池处理数据保存
                 ResultMessage resultMessage= (ResultMessage) obj;
-                ServerController.executorService.execute(new ProcessResultMessage(resultMessage));
+                ServerController.executorService.execute(new ProcessResultMessage(resultMessage,socket.getRemoteSocketAddress()));
+                //记录接入信息
+
                 //使用本线程从数据库中获取数据,如果超时或者失败则返回空的TaskMessage对象
                 List<String> unfinishTasks = resultMessage.getUnfinishTasks();
                 //封装新任务

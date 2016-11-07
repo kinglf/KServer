@@ -35,7 +35,7 @@ public class Environment extends Properties{
     /**
      * 本机名称
      */
-    private static String localhostName;
+    public static String localhostName;
     /**
      * 主机IP
      */
@@ -47,7 +47,31 @@ public class Environment extends Properties{
     /**
      * domain->httpClientConfig 的存储Map
      */
-    private static Map<String,HttpClientConfig> httpClientConfigHashMap=new HashMap<String,HttpClientConfig>();
+    public static Map<String,HttpClientConfig> httpClientConfigHashMap=new HashMap<String,HttpClientConfig>();
+
+    public static int MinWebUrlTotal=50;
+    public static int MaxPageTotal=1000;
+
+    public static int MaxThreads=10;
+
+    public static String markcode="ABCDEFGHIJKLMN";
+
+    public static String Default_HttpConfigName="default";
+
+
+
+
+
+
+
+    public static int getMaxThreads() {
+        return MaxThreads;
+    }
+
+    public static void setMaxThreads(int maxThreads) {
+        MaxThreads = maxThreads;
+    }
+
 
 
 
@@ -79,5 +103,12 @@ public class Environment extends Properties{
 
     public static int getHost_port() {
         return host_port;
+    }
+    public static HttpClientConfig getHttpClientConfig(String domain){
+        HttpClientConfig httpClientConfig = httpClientConfigHashMap.get(domain);
+        if(httpClientConfig==null){
+            httpClientConfig=httpClientConfigHashMap.get(Default_HttpConfigName);
+        }
+        return httpClientConfig;
     }
 }

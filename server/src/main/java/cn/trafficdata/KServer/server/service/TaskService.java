@@ -75,16 +75,20 @@ public class TaskService {
 
     public static TaskMessage getNewTaskMessage(List<String> unFinshTask, int threads) {
         TaskMessage taskMessage = null;
-        //请求任务模式,默认将命令设置为下载模式
-        taskMessage.setCommand(Field.Schema_Download);//downloader
-        //根据剩余任务量得到新任务
-        Map<String, Integer> unFinshTaskDomainNumMap = MessageUtil.getUnFinshTaskDomainNumMap(unFinshTask);
-        List<WebUrl> newWebUrlList = getNewWebUrlList(unFinshTaskDomainNumMap, threads);
-        taskMessage.setWebUrls(newWebUrlList);
-        //根据新任务得到配置
-        Map<String, Integer> unFinshTaskDomainNumMapByWebUrl = MessageUtil.getUnFinshTaskDomainNumMapByWebUrl(newWebUrlList);
-        Map<String, HttpClientConfig> httpClientConfigHashMap = getHttpClientConfigHashMap(unFinshTaskDomainNumMapByWebUrl);
-        taskMessage.setHttpClientConfigHashMap(httpClientConfigHashMap);
+        try {
+            //请求任务模式,默认将命令设置为下载模式
+            taskMessage.setCommand(Field.Schema_Download);//downloader
+            //根据剩余任务量得到新任务
+            Map<String, Integer> unFinshTaskDomainNumMap = MessageUtil.getUnFinshTaskDomainNumMap(unFinshTask);
+            List<WebUrl> newWebUrlList = getNewWebUrlList(unFinshTaskDomainNumMap, threads);
+            taskMessage.setWebUrls(newWebUrlList);
+            //根据新任务得到配置
+            Map<String, Integer> unFinshTaskDomainNumMapByWebUrl = MessageUtil.getUnFinshTaskDomainNumMapByWebUrl(newWebUrlList);
+            Map<String, HttpClientConfig> httpClientConfigHashMap = getHttpClientConfigHashMap(unFinshTaskDomainNumMapByWebUrl);
+            taskMessage.setHttpClientConfigHashMap(httpClientConfigHashMap);
+        }catch (Exception e){
+
+        }
         return taskMessage;
     }
 

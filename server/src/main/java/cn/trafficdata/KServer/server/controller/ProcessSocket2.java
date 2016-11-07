@@ -2,7 +2,7 @@ package cn.trafficdata.KServer.server.controller;
 
 import cn.trafficdata.KServer.common.model.ResultMessage;
 import cn.trafficdata.KServer.common.model.TaskMessage;
-import cn.trafficdata.KServer.server.utils.KryoSerializableUtil;
+import cn.trafficdata.KServer.common.utils.KryoSerializableUtil;
 import cn.trafficdata.KServer.server.service.TaskService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,7 +28,8 @@ public class ProcessSocket2 implements Runnable {
         try {
             ResultMessage resultMessage = KryoSerializableUtil.readObjectFromInputStream(socket.getInputStream(),ResultMessage.class);
             socket.shutdownInput();//关闭传入流
-            ServerController.executorService.execute(new ProcessResultMessage(resultMessage));//存储结果
+            String remoteSocketAddress = socket.getRemoteSocketAddress().toString();
+            ServerController.executorService.execute(new ProcessResultMessage(resultMessage,socket.getRemoteSocketAddress()));//存储结果
            //记录接入信息
 
             //使用本线程从数据库中获取数据,如果超时或者失败则返回空的TaskMessage对象

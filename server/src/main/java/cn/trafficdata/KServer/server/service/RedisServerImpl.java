@@ -1,7 +1,7 @@
 package cn.trafficdata.KServer.server.service;
 
 import cn.trafficdata.KServer.common.model.WebUrl;
-import cn.trafficdata.KServer.server.utils.KryoSerializableUtil;
+import cn.trafficdata.KServer.common.utils.KryoSerializableUtil;
 import cn.trafficdata.KServer.server.utils.RedisUtil;
 import cn.trafficdata.KServer.common.utils.UrlUtils;
 import org.slf4j.Logger;

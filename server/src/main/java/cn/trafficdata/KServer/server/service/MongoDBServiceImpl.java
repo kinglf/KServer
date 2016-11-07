@@ -1,8 +1,10 @@
 package cn.trafficdata.KServer.server.service;
 
+import cn.trafficdata.KServer.common.model.LogMessage;
 import cn.trafficdata.KServer.common.model.Page;
 import cn.trafficdata.KServer.common.model.Project;
 import cn.trafficdata.KServer.server.configurable.Field;
+import cn.trafficdata.KServer.server.model.Client;
 import cn.trafficdata.KServer.server.utils.Configuration;
 import com.cybermkd.kit.MongoKit;
 import com.cybermkd.kit.MongoQuery;
@@ -110,11 +112,28 @@ public class MongoDBServiceImpl {
                 .limit(1)
                 .findOne(Project.class);
     }
+    public static boolean changeProjectStatus(int projectId,int status){
+        ////////////////
+        MongoQuery query=new MongoQuery();
+        long update = query.use(Field.Project_Collection_Name).eq("id", projectId).modify("status", status).update();
+        if (update > 0) {
+            return true;
+        }
+        return false;
+
+    }
 
     /*=========================以下是Page的操作方法===================*/
     public static boolean savePage(Page page) {
         MongoQuery query = new MongoQuery();
         return query.use(Field.Page_Collection_Name).set(page).save();
+    }
+    public static void savePage(List<Page> pageList){
+        MongoQuery query=new MongoQuery();
+        query.use(Field.Page_Collection_Name);
+        for(Page page:pageList){
+            query.set(page).save();
+        }
     }
 
     public static boolean delPage(Page page) {
@@ -154,5 +173,31 @@ public class MongoDBServiceImpl {
             return true;
         }
         return false;
+    }
+    public static boolean isFullPage(Page page){
+        return isFullPage(page.getProjectId());
+    }
+    public static boolean isFullPage(String domain){
+        MongoQuery query=new MongoQuery();
+        Project project = query.use(Field.Page_Collection_Name).eq("domain", domain).findOne(Project.class);
+        return isFullPage(project.getId());
+    }
+    /*=========================以下是Client的操作方法===================*/
+    public static void initOrUpdateClient(Client client){
+        MongoQuery query = new MongoQuery();
+        long update = query.use(Field.Client_Collection_Name).eq("markcode",client.getMarkcode()).modify(client).update();
+        if(update==0){
+            query.use(Field.Client_Collection_Name).set(client).save();
+        }
+    }
+
+    /*=========================以下是远程Log的操作方法===================*/
+
+    public static void saveLogs(List<LogMessage> logMessageList){
+        MongoQuery query=new MongoQuery();
+        query.use(Field.Log_Collection_Name);
+        for(LogMessage logMessage:logMessageList){
+            query.set(logMessage).save();
+        }
     }
 }
