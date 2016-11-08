@@ -61,10 +61,22 @@ public class WebUrl implements Serializable {
     private String url;
     private int type;//0->GET;1->POST;
     private Map<String,String> prams;
+    private String referer;
+    private String cookies;
 
+    public String getReferer() {
+        return referer;
+    }
 
+    public void setReferer(String referer) {
+        this.referer = referer;
+    }
 
+    public String getCookies() {
+        return cookies;
+    }
 
-
-
+    public void setCookies(String cookies) {
+        this.cookies = cookies;
+    }
 }

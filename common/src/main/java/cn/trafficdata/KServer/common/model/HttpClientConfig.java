@@ -1,6 +1,8 @@
 package cn.trafficdata.KServer.common.model;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kinglf on 2016/10/18.
@@ -40,19 +42,175 @@ public class HttpClientConfig implements Serializable {
 //    Via	通知中间网关或代理服务器地址，通信协议	Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)
 //    Warning	关于消息实体的警告信息	Warn: 199 Miscellaneous warning
 
-    public String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.154 Safari/537.36 LBBROWSER";
-    public String ACCEPT = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
-    public String CONNECTION = "keep-alive";
-    public String ACCEPT_LANGUAGE = "zh-CN,zh;q=0.8";
-    public String ACCEPT_ENCODING = "gzip, deflate, sdch";
-    public boolean UseTheLastCookies = true;//使用最后使用的cookie,如果没有则新建,在client中建立一个cookiemap<site,Cookies>,重拨IP时,cookie选择是否清空
-    public boolean deleteCookiesWhenDialing = true;//当拨号时是否清空当前site的cookies
-    public boolean UseReferer = true;//请求中是否包含referer;
-    public boolean UseTheLastReferer = true;//使用最后使用的url作为Referer提交,如果不使用,则默认使用subdomain.domain.com/cn/org等首页作业提交
-    public int politenessDelay = 200;//延时
-    public boolean includeHttpsPages = true;//https支持
-    public int socketTimeout = 20000;//socket超时
-    public int connectionTimeout = 30000;//连接超时
-    public boolean followRedirects = true;//
+    private String USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.154 Safari/537.36 LBBROWSER";
+    private String ACCEPT = "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8";
+    private String CONNECTION = "keep-alive";
+    private String ACCEPT_LANGUAGE = "zh-CN,zh;q=0.8";
+    private String ACCEPT_ENCODING = "gzip, deflate, sdch";
+    private boolean UseTheLastCookies = true;//使用最后使用的cookie,如果没有则新建,在client中建立一个cookiemap<site,Cookies>,重拨IP时,cookie选择是否清空
+    private Map<String,String> cookies=new HashMap<String, String>();
+    private boolean deleteCookiesWhenDialing = true;//当拨号时是否清空当前site的cookies
+    private boolean dialWhenRequestError=true;
+    private boolean checkRequestError=false;
+    private String requestErrorIncludeRegex="";
+    private boolean UseReferer = true;//请求中是否包含referer;
+    private boolean UseTheLastReferer = true;//使用最后使用的url作为Referer提交,如果不使用,则默认使用subdomain.domain.com/cn/org等首页作业提交
+    private String REFERER="";
+    private int politenessDelay = 200;//延时
+    private boolean includeHttpsPages = true;//https支持
+    private int socketTimeout = 20000;//socket超时
+    private int connectionTimeout = 30000;//连接超时
+    private boolean followRedirects = true;//
 
+    public boolean isDialWhenRequestError() {
+        return dialWhenRequestError;
+    }
+
+    public void setDialWhenRequestError(boolean dialWhenRequestError) {
+        this.dialWhenRequestError = dialWhenRequestError;
+    }
+
+    public boolean isCheckRequestError() {
+        return checkRequestError;
+    }
+
+    public void setCheckRequestError(boolean checkRequestError) {
+        this.checkRequestError = checkRequestError;
+    }
+
+    public String getRequestErrorIncludeRegex() {
+        return requestErrorIncludeRegex;
+    }
+
+    public void setRequestErrorIncludeRegex(String requestErrorIncludeRegex) {
+        this.requestErrorIncludeRegex = requestErrorIncludeRegex;
+    }
+
+    public Map<String, String> getCookies() {
+        return cookies;
+    }
+
+    public void setCookies(Map<String, String> cookies) {
+        this.cookies = cookies;
+    }
+
+    public String getREFERER() {
+        return REFERER;
+    }
+
+    public void setREFERER(String REFERER) {
+        this.REFERER = REFERER;
+    }
+
+    public String getUSER_AGENT() {
+        return USER_AGENT;
+    }
+
+    public void setUSER_AGENT(String USER_AGENT) {
+        this.USER_AGENT = USER_AGENT;
+    }
+
+    public String getACCEPT() {
+        return ACCEPT;
+    }
+
+    public void setACCEPT(String ACCEPT) {
+        this.ACCEPT = ACCEPT;
+    }
+
+    public String getCONNECTION() {
+        return CONNECTION;
+    }
+
+    public void setCONNECTION(String CONNECTION) {
+        this.CONNECTION = CONNECTION;
+    }
+
+    public String getACCEPT_LANGUAGE() {
+        return ACCEPT_LANGUAGE;
+    }
+
+    public void setACCEPT_LANGUAGE(String ACCEPT_LANGUAGE) {
+        this.ACCEPT_LANGUAGE = ACCEPT_LANGUAGE;
+    }
+
+    public String getACCEPT_ENCODING() {
+        return ACCEPT_ENCODING;
+    }
+
+    public void setACCEPT_ENCODING(String ACCEPT_ENCODING) {
+        this.ACCEPT_ENCODING = ACCEPT_ENCODING;
+    }
+
+    public boolean isUseTheLastCookies() {
+        return UseTheLastCookies;
+    }
+
+    public void setUseTheLastCookies(boolean useTheLastCookies) {
+        UseTheLastCookies = useTheLastCookies;
+    }
+
+    public boolean isDeleteCookiesWhenDialing() {
+        return deleteCookiesWhenDialing;
+    }
+
+    public void setDeleteCookiesWhenDialing(boolean deleteCookiesWhenDialing) {
+        this.deleteCookiesWhenDialing = deleteCookiesWhenDialing;
+    }
+
+    public boolean isUseReferer() {
+        return UseReferer;
+    }
+
+    public void setUseReferer(boolean useReferer) {
+        UseReferer = useReferer;
+    }
+
+    public boolean isUseTheLastReferer() {
+        return UseTheLastReferer;
+    }
+
+    public void setUseTheLastReferer(boolean useTheLastReferer) {
+        UseTheLastReferer = useTheLastReferer;
+    }
+
+    public int getPolitenessDelay() {
+        return politenessDelay;
+    }
+
+    public void setPolitenessDelay(int politenessDelay) {
+        this.politenessDelay = politenessDelay;
+    }
+
+    public boolean isIncludeHttpsPages() {
+        return includeHttpsPages;
+    }
+
+    public void setIncludeHttpsPages(boolean includeHttpsPages) {
+        this.includeHttpsPages = includeHttpsPages;
+    }
+
+    public int getSocketTimeout() {
+        return socketTimeout;
+    }
+
+    public void setSocketTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
+    }
+
+    public int getConnectionTimeout() {
+        return connectionTimeout;
+    }
+
+    public void setConnectionTimeout(int connectionTimeout) {
+        this.connectionTimeout = connectionTimeout;
+    }
+
+    public boolean isFollowRedirects() {
+        return followRedirects;
+    }
+
+    public void setFollowRedirects(boolean followRedirects) {
+        this.followRedirects = followRedirects;
+    }
 }

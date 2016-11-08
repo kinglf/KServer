@@ -1,6 +1,7 @@
 package cn.trafficdata.KServer.client.Threads;
 
 import cn.trafficdata.KServer.client.Controller.Controller;
+import cn.trafficdata.KServer.client.Utils.DailUtils;
 import cn.trafficdata.KServer.client.Utils.SchemaManager;
 import cn.trafficdata.KServer.client.configurable.Environment;
 import cn.trafficdata.KServer.common.model.*;
@@ -18,7 +19,10 @@ import java.util.Map;
  * Created by Kinglf on 2016/11/7.
  */
 public class DaemonThread implements Runnable {
+    public static boolean pauseSwitch = false;
+    public static Map<String, String> readyForDailingMap = new HashMap<>();
     public static Map<String, Thread> ThreadPool = new HashMap<String, Thread>(Environment.getMaxThreads());
+
 
     public DaemonThread() {
         Thread.currentThread().setName("DaemonThread");
@@ -27,38 +31,63 @@ public class DaemonThread implements Runnable {
 
     public void run() {
         while (true) {
-            sleep(10);
-            //1.检查是否需要提交结果获取新任务
-            if (getWebUrlTotal() < Environment.MinWebUrlTotal || getPageResultList() > Environment.MaxPageTotal) {
-                //提交pageResultList中内容并请求新任务
-                TaskMessage taskMessage = submitPagesToserver();
-                if (taskMessage != null) {
-                    //解析任务,并将任务放在Controller的weburlListMap中
-                    //暂不作处理命令
-                    String command = taskMessage.getCommand();
-                    Map<String, HttpClientConfig> httpClientConfigHashMap = taskMessage.getHttpClientConfigHashMap();
-                    processHttpClientConfigHashMap(httpClientConfigHashMap);
-                    List<WebUrl> webUrls = taskMessage.getWebUrls();
-                    for (WebUrl webUrl : webUrls) {
-                        //分配任务
-                        checkDomainAndPushToWebUrlListMap(webUrl);
-                    }
-                }
-            } else {
-                for (String domain : Controller.WebUrlListMap.keySet()) {
-                    Thread thread = ThreadPool.get(domain);
-                    if (thread != null) {
-                        if (!thread.isAlive()) {
-                            ThreadPool.remove(domain);
+            //判断是否需要重启adsl,本类中设置public boolean,用于执行线程操作
+            if (pauseSwitch) {
+                //然后循环等待所有线程进入等待重启状态
+                boolean ready = false;
+                while (!ready) {
+                    sleep(2);
+                    for (String domain : Controller.WebUrlListMap.keySet()) {
+                        String readyStr = readyForDailingMap.get(domain);
+                        if (readyStr != null) {
+                            if (readyStr.equals("ready")) {
+                                ready = true;
+                            } else {
+                                ready = false;
+                            }
                         }
                     }
                 }
-                for (String domain : Controller.WebUrlListMap.keySet()) {
-                    Thread thread = ThreadPool.get(domain);
-                     if (thread == null && ThreadPool.size() < Environment.MaxThreads) {
-                        thread = new Thread(new Downloader(domain));
-                        ThreadPool.put(domain, thread);
-                        thread.start();
+                //重启
+                DailUtils.dailAdsl();
+                //重启完成后,改变本类的开关,并删除所有就绪状态,执行线程监测到可以继续下载时,关闭等待重启状态
+                //少个是否连接成功的测试
+                pauseSwitch = false;
+                readyForDailingMap.clear();
+            } else {
+                sleep(10);
+                //1.检查是否需要提交结果获取新任务
+                if (getWebUrlTotal() < Environment.MinWebUrlTotal || getPageResultList() > Environment.MaxPageTotal) {
+                    //提交pageResultList中内容并请求新任务
+                    TaskMessage taskMessage = submitPagesToserver();
+                    if (taskMessage != null) {
+                        //解析任务,并将任务放在Controller的weburlListMap中
+                        //暂不作处理命令
+                        String command = taskMessage.getCommand();
+                        Map<String, HttpClientConfig> httpClientConfigHashMap = taskMessage.getHttpClientConfigHashMap();
+                        processHttpClientConfigHashMap(httpClientConfigHashMap);
+                        List<WebUrl> webUrls = taskMessage.getWebUrls();
+                        for (WebUrl webUrl : webUrls) {
+                            //分配任务
+                            checkDomainAndPushToWebUrlListMap(webUrl);
+                        }
+                    }
+                } else {
+                    for (String domain : Controller.WebUrlListMap.keySet()) {
+                        Thread thread = ThreadPool.get(domain);
+                        if (thread != null) {
+                            if (!thread.isAlive()) {
+                                ThreadPool.remove(domain);
+                            }
+                        }
+                    }
+                    for (String domain : Controller.WebUrlListMap.keySet()) {
+                        Thread thread = ThreadPool.get(domain);
+                        if (thread == null && ThreadPool.size() < Environment.MaxThreads) {
+                            thread = new Thread(new DownloadThread(domain));
+                            ThreadPool.put(domain, thread);
+                            thread.start();
+                        }
                     }
                 }
             }

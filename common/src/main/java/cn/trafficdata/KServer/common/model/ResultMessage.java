@@ -16,6 +16,7 @@ public class ResultMessage {
     private HostInfo hostInfo;
     private List<Page> finishTasks;
     private List<String> unfinishTasks;
+    private List<WebUrl> errorTasks;
     public HostInfo getHostInfo() {
         return hostInfo;
     }
