@@ -3,8 +3,10 @@ package Database;
 import cn.trafficdata.KServer.common.model.HttpClientConfig;
 import cn.trafficdata.KServer.common.model.Project;
 import cn.trafficdata.KServer.common.model.WebUrl;
+import cn.trafficdata.KServer.common.utils.KLog;
 import cn.trafficdata.KServer.server.configurable.Field;
 import cn.trafficdata.KServer.server.service.MongoDBServiceImpl;
+import cn.trafficdata.KServer.server.service.TaskService;
 import com.cybermkd.kit.MongoKit;
 import com.cybermkd.kit.MongoQuery;
 import com.cybermkd.plugin.MongoPlugin;
@@ -138,5 +140,11 @@ public class testMongDb {
         for(Project project:projects){
             mongoQuery.set(project).save();
         }
+    }
+    @Test
+    public void getNextProject() throws Exception {
+        TaskService.ProcessNotStartProject();
+
+
     }
 }

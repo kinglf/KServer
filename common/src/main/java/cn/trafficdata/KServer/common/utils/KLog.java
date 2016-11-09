@@ -1,5 +1,7 @@
 package cn.trafficdata.KServer.common.utils;
 
+import com.alibaba.fastjson.JSON;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,5 +32,8 @@ public class KLog {
         logList.add(info);
         System.out.println(info);
         return true;
+    }
+    public static void printJson(Object obj){
+        System.out.println(obj.getClass().getName()+"->"+JSON.toJSONString(obj));
     }
 }

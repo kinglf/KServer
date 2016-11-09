@@ -43,7 +43,7 @@ public class Controller {
             if (!deamonThread.isAlive()){
                 deamonThread.start();
             }
-            Thread.sleep(30*60*1000);//每半小时检测一次守护线程是否存活,如果不存活则激活
+            Thread.sleep(3*1000);//每半小时检测一次守护线程是否存活,如果不存活则激活
         }
     }
 

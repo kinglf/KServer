@@ -113,6 +113,7 @@ public class HttpClientDownloader implements Downloader {
         /**
          * before
          */
+        System.out.println("执行任务"+webUrl.getUrl());
         Page page = null;
         HttpUriRequest httpUriRequest = getHttpUriRequest(webUrl);
         /**

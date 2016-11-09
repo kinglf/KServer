@@ -48,6 +48,7 @@ public class ServerController {
          */
         while(true){
             try {
+
                 Socket socket = serverSocket.accept();
 //                socketExecutorService.execute(new ProcessSocket(socket));
                 socketExecutorService.execute(new ProcessSocket2(socket));

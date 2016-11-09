@@ -63,6 +63,7 @@ public class RedisServerImpl {
 
     public static List<WebUrl> getNewTask(String domain,int num){
         List<WebUrl> webUrls=new ArrayList<WebUrl>();
+        //lrange 取出,只是查看,没有移除数据库
         List<byte[]> byteArrs = RedisUtil.lrange(domain.getBytes(), 0, num);
         for(byte[] bytes:byteArrs){
             WebUrl webUrl = KryoSerializableUtil.deserialize(bytes, WebUrl.class);

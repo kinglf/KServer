@@ -5,6 +5,7 @@ import cn.trafficdata.KServer.client.Utils.DailUtils;
 import cn.trafficdata.KServer.client.Utils.SchemaManager;
 import cn.trafficdata.KServer.client.configurable.Environment;
 import cn.trafficdata.KServer.common.model.*;
+import cn.trafficdata.KServer.common.utils.KLog;
 import cn.trafficdata.KServer.common.utils.KryoSerializableUtil;
 import cn.trafficdata.KServer.common.utils.UrlUtils;
 
@@ -59,18 +60,22 @@ public class DaemonThread implements Runnable {
                 //1.检查是否需要提交结果获取新任务
                 if (getWebUrlTotal() < Environment.MinWebUrlTotal || getPageResultList() > Environment.MaxPageTotal) {
                     //提交pageResultList中内容并请求新任务
-                    TaskMessage taskMessage = submitPagesToserver();
-                    if (taskMessage != null) {
-                        //解析任务,并将任务放在Controller的weburlListMap中
-                        //暂不作处理命令
-                        String command = taskMessage.getCommand();
-                        Map<String, HttpClientConfig> httpClientConfigHashMap = taskMessage.getHttpClientConfigHashMap();
-                        processHttpClientConfigHashMap(httpClientConfigHashMap);
-                        List<WebUrl> webUrls = taskMessage.getWebUrls();
-                        for (WebUrl webUrl : webUrls) {
-                            //分配任务
-                            checkDomainAndPushToWebUrlListMap(webUrl);
+                    try {
+                        TaskMessage taskMessage = submitPagesToserver();
+                        if (taskMessage != null) {
+                            //解析任务,并将任务放在Controller的weburlListMap中
+                            //暂不作处理命令
+                            String command = taskMessage.getCommand();
+                            Map<String, HttpClientConfig> httpClientConfigHashMap = taskMessage.getHttpClientConfigHashMap();
+                            processHttpClientConfigHashMap(httpClientConfigHashMap);
+                            List<WebUrl> webUrls = taskMessage.getWebUrls();
+                            for (WebUrl webUrl : webUrls) {
+                                //分配任务
+                                checkDomainAndPushToWebUrlListMap(webUrl);
+                            }
                         }
+                    }catch (Exception e){
+
                     }
                 } else {
                     for (String domain : Controller.WebUrlListMap.keySet()) {
@@ -129,15 +134,22 @@ public class DaemonThread implements Runnable {
         rm.setHostInfo(new HostInfo(Environment.localhostName, Environment.markcode, SchemaManager.getSchemaTypeString(), Environment.MaxThreads, Controller.LogList));
         Socket socket = null;
         TaskMessage taskMessage = null;
+
         try {
             socket = new Socket(ip, port);
+            KLog.printJson(rm);
             KryoSerializableUtil.sendMessage(socket.getOutputStream(), rm);
-            socket.shutdownOutput();
+//            socket.shutdownOutput();
             taskMessage = KryoSerializableUtil.readObjectFromInputStream(socket.getInputStream(), TaskMessage.class);
-            socket.shutdownInput();
-            socket.close();
+//            socket.shutdownInput();
         } catch (IOException e) {
             e.printStackTrace();
+        }finally {
+            try {
+                socket.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return taskMessage;
 

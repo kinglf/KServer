@@ -1,5 +1,6 @@
 package cn.trafficdata.KServer.server.service;
 
+import cn.trafficdata.KServer.common.utils.KLog;
 import cn.trafficdata.KServer.server.configurable.Field;
 import cn.trafficdata.KServer.common.model.HttpClientConfig;
 import cn.trafficdata.KServer.common.model.Project;
@@ -52,7 +53,11 @@ public class TaskService {
                     //本次请求中,不对新解析的任务进行提交,
                     //下次请求,再提交.
                     // TO DO ProcessNotStartProject()
-                    ProcessNotStartProject();
+                    try {
+                        ProcessNotStartProject();
+                    } catch (Exception e) {
+                        retryNum++;
+                    }
                 }
             }
         }
@@ -74,7 +79,7 @@ public class TaskService {
 
 
     public static TaskMessage getNewTaskMessage(List<String> unFinshTask, int threads) {
-        TaskMessage taskMessage = null;
+        TaskMessage taskMessage = new TaskMessage();
         try {
             //请求任务模式,默认将命令设置为下载模式
             taskMessage.setCommand(Field.Schema_Download);//downloader
@@ -86,8 +91,8 @@ public class TaskService {
             Map<String, Integer> unFinshTaskDomainNumMapByWebUrl = MessageUtil.getUnFinshTaskDomainNumMapByWebUrl(newWebUrlList);
             Map<String, HttpClientConfig> httpClientConfigHashMap = getHttpClientConfigHashMap(unFinshTaskDomainNumMapByWebUrl);
             taskMessage.setHttpClientConfigHashMap(httpClientConfigHashMap);
-        }catch (Exception e){
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return taskMessage;
     }
@@ -98,7 +103,7 @@ public class TaskService {
      *
      * @return
      */
-    public synchronized static void ProcessNotStartProject() {
+    public synchronized static void ProcessNotStartProject() throws Exception {
         try {
             Project nextProject = MongoDBServiceImpl.getNextProject();
             List<WebUrl> webUrlListOfNextProject = nextProject.getWebUrlList();

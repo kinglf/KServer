@@ -100,17 +100,22 @@ public class MongoDBServiceImpl {
     public static List<Project> getUnFinishProjectList() {
         MongoQuery query = new MongoQuery();
         return query.use(Field.Project_Collection_Name)
-                .ne("status", 2)
+                .eq("status", 1)
                 .find(Project.class);
     }
 
     public static Project getNextProject() {
         MongoQuery query = new MongoQuery();
-        return query.use(Field.Project_Collection_Name)
+        List<Project> list = query.use(Field.Project_Collection_Name)
                 .eq("status", 0)
                 .ascending("level")//优先级,升序排列,数字越小,优先级越高
                 .limit(1)
-                .findOne(Project.class);
+                .find(Project.class);
+        if(list.size()>0){
+            return list.get(0);
+        }else {
+            return null;
+        }
     }
     public static boolean changeProjectStatus(int projectId,int status){
         ////////////////

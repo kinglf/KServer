@@ -1,5 +1,6 @@
 package cn.trafficdata.KServer.common.model;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.annotation.JSONField;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
@@ -140,5 +141,10 @@ public class Page  {
     }
     public void setWebUrl(WebUrl webUrl) {
         this.webUrl = webUrl;
+    }
+
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

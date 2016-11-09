@@ -39,11 +39,11 @@ public class Environment extends Properties{
     /**
      * 主机IP
      */
-    private static String host_ip;
+    private static String host_ip="127.0.0.1";
     /**
      * 主机端口
      */
-    private static int host_port;
+    private static int host_port=9999;
     /**
      * domain->httpClientConfig 的存储Map
      */

@@ -2,12 +2,17 @@ package cn.trafficdata.KServer.server.controller;
 
 import cn.trafficdata.KServer.common.model.ResultMessage;
 import cn.trafficdata.KServer.common.model.TaskMessage;
+import cn.trafficdata.KServer.common.utils.KLog;
 import cn.trafficdata.KServer.common.utils.KryoSerializableUtil;
 import cn.trafficdata.KServer.server.service.TaskService;
+import com.esotericsoftware.kryo.Kryo;
+import com.esotericsoftware.kryo.io.Input;
+import com.sun.xml.internal.messaging.saaj.util.ByteInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Socket;
 import java.util.List;
 
@@ -24,12 +29,13 @@ public class ProcessSocket2 implements Runnable {
 //        new Thread(this).start();
     }
 
-    public void run() {
+    public synchronized void run() {
         try {
+
             ResultMessage resultMessage = KryoSerializableUtil.readObjectFromInputStream(socket.getInputStream(),ResultMessage.class);
-            socket.shutdownInput();//关闭传入流
-            String remoteSocketAddress = socket.getRemoteSocketAddress().toString();
+//            KLog.printJson(resultMessage);
             ServerController.executorService.execute(new ProcessResultMessage(resultMessage,socket.getRemoteSocketAddress()));//存储结果
+//            socket.shutdownInput();//关闭传入流
            //记录接入信息
 
             //使用本线程从数据库中获取数据,如果超时或者失败则返回空的TaskMessage对象
@@ -39,7 +45,7 @@ public class ProcessSocket2 implements Runnable {
             TaskMessage newTaskMessage = TaskService.getNewTaskMessage(unfinishTasks,resultMessage.getHostInfo().getMaxThreads());
             //发送
             KryoSerializableUtil.sendMessage(socket.getOutputStream(),newTaskMessage);
-            socket.shutdownOutput();//关闭传出流
+//            socket.shutdownOutput();//关闭传出流
         } catch (IOException e) {
             e.printStackTrace();
         }finally {
