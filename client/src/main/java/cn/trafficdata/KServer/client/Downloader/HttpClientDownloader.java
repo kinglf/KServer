@@ -6,6 +6,7 @@ import cn.trafficdata.KServer.common.model.HttpClientConfig;
 import cn.trafficdata.KServer.common.model.Page;
 import cn.trafficdata.KServer.common.model.WebUrl;
 import cn.trafficdata.KServer.common.utils.UrlUtils;
+import com.alibaba.fastjson.JSON;
 import org.apache.http.*;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.CookieSpecs;
@@ -131,7 +132,7 @@ public class HttpClientDownloader implements Downloader {
             page.setWebUrl(webUrl);
             page.setProjectId(webUrl.getProjectID());
             page.load(response.getEntity());
-            page.setFetchResponseHeaders(response.getAllHeaders());
+            page.setFetchResponseHeadersJson(JSON.toJSONString(response.getAllHeaders()));
             page.setStatusCode(response.getStatusLine().getStatusCode());
             /**
              * 重定向处理

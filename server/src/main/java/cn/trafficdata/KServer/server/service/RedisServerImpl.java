@@ -60,17 +60,29 @@ public class RedisServerImpl {
         }
         return true;
     }
+//    public static List<WebUrl> getNewTask(String domain,int num){
+//        List<WebUrl> webUrls=new ArrayList<WebUrl>();
+//        //lrange 取出,只是查看,没有移除数据库
+//        List<byte[]> byteArrs = RedisUtil.lrange(domain.getBytes(), 0, num);
+//        for(byte[] bytes:byteArrs){
+//            WebUrl webUrl = KryoSerializableUtil.deserialize(bytes, WebUrl.class);
+//            webUrls.add(webUrl);
+//        }
+//        return webUrls;
+//
+//    }
 
     public static List<WebUrl> getNewTask(String domain,int num){
         List<WebUrl> webUrls=new ArrayList<WebUrl>();
-        //lrange 取出,只是查看,没有移除数据库
-        List<byte[]> byteArrs = RedisUtil.lrange(domain.getBytes(), 0, num);
-        for(byte[] bytes:byteArrs){
+        for(int i=0;i<num;i++){
+            byte[] bytes = RedisUtil.lpop(domain.getBytes());
+            if (bytes==null){
+                return webUrls;
+            }
             WebUrl webUrl = KryoSerializableUtil.deserialize(bytes, WebUrl.class);
             webUrls.add(webUrl);
         }
         return webUrls;
-
     }
 
     /**

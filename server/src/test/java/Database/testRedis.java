@@ -53,4 +53,7 @@ public class testRedis {
         WebUrl webUrl = kryo.readObject(input, WebUrl.class);
         KLog.printJson(webUrl);
     }
+    @Test void testRedisLpop(){
+
+    }
 }

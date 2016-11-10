@@ -27,7 +27,9 @@ public class Page  {
     private String contentEncoding;
     private String contentCharset;
     private String language;
-    protected Header[] fetchResponseHeaders;
+    //JSON对没有set方式的类不能进行反序列化,而且kryo也不能序列化他
+    //其实他进行回传并没有多大用处,但还是保留吧
+    private String fetchResponseHeadersJson;
 
 
     public boolean isRedirect() {
@@ -94,12 +96,12 @@ public class Page  {
         this.language = language;
     }
 
-    public Header[] getFetchResponseHeaders() {
-        return fetchResponseHeaders;
+    public String getFetchResponseHeadersJson() {
+        return fetchResponseHeadersJson;
     }
 
-    public void setFetchResponseHeaders(Header[] fetchResponseHeaders) {
-        this.fetchResponseHeaders = fetchResponseHeaders;
+    public void setFetchResponseHeadersJson(String fetchResponseHeadersJson) {
+        this.fetchResponseHeadersJson = fetchResponseHeadersJson;
     }
 
     public void load(HttpEntity entity) throws Exception {

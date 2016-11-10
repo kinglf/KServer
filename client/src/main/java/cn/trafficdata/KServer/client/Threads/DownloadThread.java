@@ -8,12 +8,16 @@ import cn.trafficdata.KServer.common.model.HttpClientConfig;
 import cn.trafficdata.KServer.common.model.Page;
 import cn.trafficdata.KServer.common.model.WebUrl;
 import cn.trafficdata.KServer.common.utils.UrlUtils;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.util.EntityUtils;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -57,7 +61,8 @@ public class DownloadThread implements Runnable {
                         putPageList(page);
                         //存储referer和cookies
                         this.theLastReferer = webUrl.getUrl();
-                        this.theLastCookies = getCookieFromHeader(page.getFetchResponseHeaders());
+//                        this.theLastCookies = getCookieFromHeader(page.getFetchResponseHeadersJson(),this.theLastCookies);
+                        //不处理Set-Cookie,httpclient的CookieSpec注册类型为BEST_MATCH,会自动处理Cookie
                     }
 
                 } catch (IndexOutOfBoundsException iobe) {
@@ -137,7 +142,6 @@ public class DownloadThread implements Runnable {
 
     private WebUrl addRCToWebUrl(WebUrl webUrl) {
         //组装webUrl
-        if (!webUrl.getReferer().equals("")) {
             if (httpClientConfig.isUseReferer()) {
                 if (httpClientConfig.isUseTheLastReferer()) {
                     webUrl.setReferer(this.theLastReferer);
@@ -146,14 +150,12 @@ public class DownloadThread implements Runnable {
                     webUrl.setReferer(referer);
                 }
             }
-        }
-        if (!webUrl.getCookies().equals("")) {
             if (httpClientConfig.isUseTheLastCookies()) {
-                webUrl.setCookies(this.theLastCookies);
+                webUrl.setCookies(null);
+                //                webUrl.setCookies(this.theLastCookies);
             } else {
                 webUrl.setCookies(getStrFromCookieMap(httpClientConfig.getCookies()));
             }
-        }
         return webUrl;
     }
 
@@ -165,12 +167,5 @@ public class DownloadThread implements Runnable {
         return stringBuilder.substring(0, stringBuilder.length() - 2);
     }
 
-    protected String getCookieFromHeader(Header[] headers) {
-        for (Header header : headers) {
-            if (header.getName().equals("Cookie")) {
-                return header.getValue();
-            }
-        }
-        return "";
-    }
+
 }

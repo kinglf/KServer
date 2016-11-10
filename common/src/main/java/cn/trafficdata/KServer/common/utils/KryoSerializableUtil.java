@@ -1,20 +1,21 @@
 package cn.trafficdata.KServer.common.utils;
 
-import cn.trafficdata.KServer.common.model.Page;
-import cn.trafficdata.KServer.common.model.ResultMessage;
-import cn.trafficdata.KServer.common.model.TaskMessage;
-import cn.trafficdata.KServer.common.model.WebUrl;
+import cn.trafficdata.KServer.common.model.*;
+import com.alibaba.fastjson.JSONObject;
 import com.esotericsoftware.kryo.Kryo;
 import com.esotericsoftware.kryo.io.Input;
 import com.esotericsoftware.kryo.io.Output;
 import com.esotericsoftware.kryo.serializers.JavaSerializer;
 import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
+import org.apache.http.HeaderElement;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.SocketException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Kinglf on 2016/10/27.
@@ -25,6 +26,18 @@ public class KryoSerializableUtil {
     static {
         //kryo 的配置
         kryo.setRegistrationRequired(false);
+        kryo.register(ResultMessage.class);
+        kryo.register(HostInfo.class);
+        kryo.register(ArrayList.class);
+        kryo.register(Page.class);
+        kryo.register(String.class);
+        kryo.register(WebUrl.class);
+        kryo.register(HashMap.class);
+        kryo.register(JSONObject.class);
+        kryo.register(byte[].class);
+        kryo.register(boolean.class);
+        kryo.register(int.class);
+
 //        kryo.setReferences(false);
 //        kryo.register(ResultMessage.class,new JavaSerializer());
 //        kryo.register(TaskMessage.class,new JavaSerializer());
@@ -33,19 +46,17 @@ public class KryoSerializableUtil {
     }
 
     public static <T>  T readObjectFromInputStream(InputStream is,Class<T> t) throws IllegalArgumentException {
-//        return kryo.readObject(new Input(is),t);
-        kryo.register(t,new JavaSerializer());
-        Object o = kryo.readClassAndObject(new Input(is));
-        return (T) o;
+        return kryo.readObject(new Input(is),t);
+//        Object o = kryo.readClassAndObject(new Input(is));
+//        return (T) o;
 
     }
     public static void sendMessage(OutputStream os,Object obj) throws IllegalArgumentException{
 
         try{
             Output output=new Output(os);
-//            kryo.writeObject(output,obj);
-            kryo.register(obj.getClass(),new JavaSerializer());
-            kryo.writeClassAndObject(output,obj);
+            kryo.writeObject(output,obj);
+//            kryo.writeClassAndObject(output,obj);
             output.flush();
 //            output.close();
         }catch (Exception se){
